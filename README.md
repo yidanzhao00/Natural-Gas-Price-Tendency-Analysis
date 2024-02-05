@@ -35,9 +35,23 @@ format, which is suitable for analysis. Access the data at: https://www.aer.ca/p
 ## Data Analysis Outline
 
 ### 1. Data Preparation and Cleaning
-1. Use Python CSV Scraper code to combine all 50 US weather data files into one file: combined_us_weather_data (deleted "Station code" column)
-2. Use Python CSV Scraper code to combine all 19 Canada weather data files into one file: combined_ca_weather_data (deleted "Longitude (x)", "Latitude (y)", "Climate ID", "Data Quality", "Max Temp Flag", "Min Temp Flag", "Mean Temp Flag", "Heat Deg Days Flag", "Cool Deg Days Flag", and other "flag" columns)
-3. In "alberta_weather" file, deleted: "Air_Temp._Min._(°C)_interpolation_flags", and other "flags" columns"
+1. In *data_files* folder, created seperated folders for daily, monthly, quarterly, and yearly folders.
+
+2. In *Daily_data* folder, **Daily_data** csv file is created with natural gas prices, electricity data, and NGTL data. Other daily data files are stored in *Other_daily_data* folder; these files have different number of observations (e.g., weekends and holidays have already been excluded) which cannot be directly merged with *Daily_data* csv file.
+
+3. In *Monthly_data* folder, two seperated weather data folders are created for US and Canada
+
+4. Used Python CSV Scraper code to combine all 50 US weather data files into one csv file: **combined_us_weather_data** (deleted "Station code" column). File directory: *data files* > *Monthly_data* > *US_weather_data*
+
+5. Used Python CSV Scraper code to combine all 19 Canada weather data files into one csv file: **combined_ca_weather_data** (deleted "Longitude (x)", "Latitude (y)", "Climate ID", "Data Quality", "Max Temp Flag", "Min Temp Flag", "Mean Temp Flag", "Heat Deg Days Flag", "Cool Deg Days Flag", and other "flag" columns). File directory: *data files* > *Monthly_data* > *CA_weather_data*
+
+5. In **alberta_weather** csv file, which contains weather data of Alberta townships, deleted: "Air_Temp._Min._(°C)_interpolation_flags", and other "flags" columns. File directory: *data files* > *Monthly_data* > *CA_weather_data*
+
+6. **Monthly_Data** csv file contains macro variables such as US and Canada inflation, WTI, crude oil prices, etc.
+
+7. Other monthly data files are stored in *Other_natural_resources_data* folder, which contains oil, butane, ethane, etc. data that need to be clened in excel first before merging into 1 csv file.
+
+
 
 ### 2. Exploratory Data Analysis
 * Summary statistics overview (mean, median)
