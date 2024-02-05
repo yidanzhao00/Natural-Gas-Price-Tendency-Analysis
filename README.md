@@ -37,17 +37,17 @@ format, which is suitable for analysis. Access the data at: https://www.aer.ca/p
 ### 1. Data Preparation and Cleaning
 1. In *data_files* folder, created seperated folders for daily, monthly, quarterly, and yearly folders.
 
-2. In *Daily_data* folder, <u>**Daily_data**</u> csv file is created with natural gas prices, electricity data, and NGTL data. Other daily data files are stored in *Other_daily_data* folder; these files have different number of observations (e.g., weekends and holidays have already been excluded) which cannot be directly merged with *Daily_data* csv file.
+2. In *Daily_data* folder, <font color='red'><u>**Daily_data**</u></font> csv file is created with natural gas prices, electricity data, and NGTL data. Other daily data files are stored in *Other_daily_data* folder; these files have different number of observations (e.g., weekends and holidays have already been excluded) which cannot be directly merged with *Daily_data* csv file.
 
 3. In *Monthly_data* folder, two seperated weather data folders are created for US and Canada
 
-4. Used Python CSV Scraper code to combine all 50 US weather data files into one csv file: <u>**combined_us_weather_data**</u> (deleted "Station code" column). **File directory: *data files* > *Monthly_data* > *US_weather_data***
+4. Used Python CSV Scraper code to combine all 50 US weather data files into one csv file: <font color='red'><u>**combined_us_weather_data**</u></font> (deleted "Station code" column). **File directory: *data files* > *Monthly_data* > *US_weather_data***
 
-5. Used Python CSV Scraper code to combine all 19 Canada weather data files into one csv file: <u>**combined_ca_weather_data**</u> (deleted "Longitude (x)", "Latitude (y)", "Climate ID", "Data Quality", "Max Temp Flag", "Min Temp Flag", "Mean Temp Flag", "Heat Deg Days Flag", "Cool Deg Days Flag", and other "flag" columns). **File directory: *data files* > *Monthly_data* > *CA_weather_data***
+5. Used Python CSV Scraper code to combine all 19 Canada weather data files into one csv file: <font color='red'><u>**combined_ca_weather_data**</u></font> (deleted "Longitude (x)", "Latitude (y)", "Climate ID", "Data Quality", "Max Temp Flag", "Min Temp Flag", "Mean Temp Flag", "Heat Deg Days Flag", "Cool Deg Days Flag", and other "flag" columns). **File directory: *data files* > *Monthly_data* > *CA_weather_data***
 
-6. In <u>**alberta_weather**</u> csv file, which contains weather data of Alberta townships, deleted: "Air_Temp._Min._(°C)_interpolation_flags", and other "flags" columns. **File directory: *data files* > *Monthly_data* > *CA_weather_data***
+6. In <font color='red'><u>**alberta_weather**</u></font> csv file, which contains weather data of Alberta townships, deleted: "Air_Temp._Min._(°C)_interpolation_flags", and other "flags" columns. **File directory: *data files* > *Monthly_data* > *CA_weather_data***
 
-7. <u>**Monthly_Data**</u> csv file contains macro variables such as US and Canada inflation, WTI, crude oil prices, etc.
+7. <font color='red'><u>**Monthly_Data**</u></font> csv file contains macro variables such as US and Canada inflation, WTI, crude oil prices, etc.
 
 8. Other monthly data files are stored in *Other_natural_resources_data* folder, which contains oil, butane, ethane, etc. data that need to be clened in excel first before merging into 1 csv file.
 
