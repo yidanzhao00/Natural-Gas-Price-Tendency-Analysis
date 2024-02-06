@@ -35,6 +35,7 @@ format, which is suitable for analysis. Access the data at: https://www.aer.ca/p
 ## Data Analysis Outline
 
 ### 1. Data Preparation and Cleaning
+- **Excel file cleaning**
 1. In *data_files* folder, created seperated folders for daily, monthly, quarterly, and yearly folders.
 
 2. In *Daily_data* folder, <font color='red'><u>**Daily_data**</u></font> csv file is created with natural gas prices, electricity data, and NGTL data. Other daily data files are stored in *Other_daily_data* folder; these files have different number of observations (e.g., weekends and holidays have already been excluded) which cannot be directly merged with *Daily_data* csv file.
@@ -51,6 +52,27 @@ format, which is suitable for analysis. Access the data at: https://www.aer.ca/p
 
 8. Other monthly data files are stored in *Other_natural_resources_data* folder, which contains oil, butane, ethane, etc. data that need to be clened in excel first before merging into 1 csv file.
 
+- **Python cleaning**
+1. Check the data type of all columns:
+
+Example: daily_df.dtypes
+
+2. Convert date column into datetime objects if they are not in datetime type already:
+
+Example: 
+price_df['Date'] = pd.to_datetime(price_df['Date'])
+
+3. Renaming all columns to add underscores
+
+Example: 
+daily_df.columns=daily_df.columns.str.replace(' ', '_')
+
+4. Handling missing values
+If it's reasonble to assume the last missing value is similar to the last available value, replace missing values (NaNs) using forward fill or backward fill
+
+Example: 
+df.fillna(method='ffill')  # Forward fill
+df.fillna(method='bfill')  # Backward fill
 
 
 ### 2. Exploratory Data Analysis
