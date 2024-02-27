@@ -1,0 +1,241 @@
+#This code will do the ARIMA analysis and uses the SQL output csv
+#Please note we have manually created the standardized versons of the variable
+#So this modification has been made (Using the standard normal distribution).
+#If you just use the sQL file without this change an error will occur
+
+
+
+import os
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm                    # For better regression analysis tools
+from sklearn import linear_model as lm          # For better prediction tools
+from sklearn.metrics import mean_squared_error
+from statsmodels.tsa.arima.model import ARIMA   # For ARIMA
+import matplotlib.pyplot as plt
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+
+
+#This file was the output from the SQL code but slighlty modified as described
+#above
+#make sure that this csv file is saved in the same location as this python file
+df = pd.read_csv('ARIMA macro input.csv')
+
+# Split the data into training and test sets
+train_size = int(len(df) * 0.8)
+train = df.iloc[:train_size]
+test = df.iloc[train_size:]
+
+# Define the range of p, d, and q values to try
+ps = range(0, 3)
+ds = range(0, 3)
+qs = range(0, 3)
+
+# Define a list to store the results
+results = []
+
+
+
+
+
+# Select specific columns from the exogenous DataFrame
+exog_vars = ['stan_NASDAQ', 'stan_WTI',"stan_SP500" ,"stan_DJIA","stan_TBILL5YR","stan_TBILL10YR"]
+exog_df_subset = df[exog_vars]
+
+
+
+
+
+
+######All variables
+#The model chosen is the one with the lowest mean square error (MSE)
+
+# Loop through all possible combinations of p, d, and q values
+for p in ps:
+    for d in ds:
+        for q in qs:
+            try:
+                # Fit the ARIMA model with exogenous variables on the training set
+                arima_model = ARIMA(train['price'], order=(p, d, q), exog=train[exog_vars])
+                arima_results = arima_model.fit()
+                print(arima_results.summary())
+
+                # Use the model to make predictions on the test set
+                exog_test = test[exog_vars].fillna(method='ffill') # Handle missing values
+                predictions = arima_results.predict(start=test.index[0], end=test.index[-1], exog=exog_test)
+
+                # Calculate the mean squared error (MSE) of the predictions
+                mse = ((predictions - test['price']) ** 2).mean()
+
+                # Save the results
+                results.append({
+                    'p': p,
+                    'd': d,
+                    'q': q,
+                    'MSE': mse
+                })
+            except:
+                pass
+
+# Convert the results to a DataFrame
+results_df = pd.DataFrame(results)
+
+# Print the results sorted by MSE
+print(results_df.sort_values('MSE'))
+
+
+#NASDAQ appears to be the only statistically significant variable as
+#seen by its p-value
+
+
+
+
+#Plot of the prediciton of the best model against the true values for the last 30 values of data
+
+
+arima_model = ARIMA(df['price'], order=(2, 0, 2), exog=exog_df_subset)
+arima_results = arima_model.fit()
+
+# Use the model to make predictions on the last 30 values of the dataset
+exog_test = df.iloc[-101:][exog_vars].fillna(method='ffill')  # Handle missing values
+predictions = arima_results.predict(start=df.index[-101], end=df.index[-1], exog=exog_test)
+print(type(predictions))
+print(predictions)
+
+pred_csv_data = pd.Series(predictions)
+
+# Export the series to a csv file
+pred_csv_data.to_csv('ARIMA202predictions101.csv')
+
+
+# Calculate the mean squared error (MSE) of the predictions
+mse = ((predictions - df['price'].iloc[-101:]) ** 2).mean()
+print("MSE:",mse)
+plt.plot(df["quote_dt"].iloc[-120:],df['price'].iloc[-120:], label='True Values')
+plt.plot(df["quote_dt"].iloc[-101:],predictions, label='Predicted Values')
+
+plt.xlim("2022-07-21", "2023-01-12")
+
+plt.xticks(df["quote_dt"].iloc[-120::2])
+
+plt.tick_params(axis='x', labelrotation=90)
+
+
+#plt.xticks(['2022-10-04','2022-10-06', '2022-10-13','2022-10-20','2022-10-27','2022-11-2','2022-11-9', '2022-11-16', '2022-11-18', '2022-11-28', '2022-12-5', '2022-12-12', '2022-12-20','2022-12-28',"2023-01-4","2023-01-11"])
+plt.title('101 Day Prediction of ARIMA(2,0,2)')
+plt.xlabel('Dates')
+plt.ylabel('CCA Price')
+
+plt.legend()
+
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###Just the CCA price (if you were curious you could run this)
+
+# Define the range of p, d, and q values to try
+ps = range(0, 3)
+ds = range(0, 3)
+qs = range(0, 3)
+
+# Define a list to store the results
+results = []
+
+# Loop through all possible combinations of p, d, and q values
+for p in ps:
+    for d in ds:
+        for q in qs:
+            try:
+                # Fit the ARIMA model on the training set
+                arima_model = ARIMA(train['price'], order=(p, d, q))
+                arima_results = arima_model.fit()
+                print(arima_results.summary())
+
+                # Use the model to make predictions on the test set
+                predictions = arima_results.predict(start=test.index[0], end=test.index[-1])
+
+                # Calculate the mean squared error (MSE) of the predictions
+                mse = ((predictions - test['price']) ** 2).mean()
+
+                # Save the results
+                results.append({
+                    'p': p,
+                    'd': d,
+                    'q': q,
+                    'MSE': mse
+                })
+            except:
+                pass
+
+# Convert the results to a DataFrame
+results_df = pd.DataFrame(results)
+
+# Print the results sorted by MSE
+print(results_df.sort_values('MSE'))
+
+
+
+
+
+
+
+
+
+#####Just the NASDAQ price predicting CCA prices
+
+# Define the range of p, d, and q values to try
+ps = range(0, 3)
+ds = range(0, 3)
+qs = range(0, 3)
+
+# Define a list to store the results
+results = []
+
+# Loop through all possible combinations of p, d, and q values
+for p in ps:
+    for d in ds:
+        for q in qs:
+            try:
+                # Fit the ARIMA model on the training set
+                arima_model = ARIMA(train['stan_NASDAQ'], order=(p, d, q))
+                arima_results = arima_model.fit()
+                print(arima_results.summary())
+
+                # Use the model to make predictions on the test set
+                predictions = arima_results.predict(start=test.index[0], end=test.index[-1])
+
+                # Calculate the mean squared error (MSE) of the predictions
+                mse = ((predictions - test['stan_NASDAQ']) ** 2).mean()
+
+                # Save the results
+                results.append({
+                    'p': p,
+                    'd': d,
+                    'q': q,
+                    'MSE': mse
+                })
+            except:
+                pass
+
+# Convert the results to a DataFrame
+results_df = pd.DataFrame(results)
+
+# Print the results sorted by MSE
+print(results_df.sort_values('MSE'))
